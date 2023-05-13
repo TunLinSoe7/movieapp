@@ -1,0 +1,19 @@
+const double kPS100px = 100.0;
+const double kPS10px = 10.0;
+const double kPS50px = 50.0;
+const double kPS40px = 40.0;
+const double kPS80px = 80.0;
+const double kPS20px = 20.0;
+const double kPS8px = 8.0;
+const double kPS400px = 400.0;
+const double kPS15px = 15.0;
+const double kPS200px = 200.0;
+const double kPS180px = 180.0;
+const double kPS260px = 260.0;
+const double kPS18px = 18.0;
+const double kPS300px = 300.0;
+const double kPS16px = 16.0;
+const double kPS14px = 14.0;
+const double kPS12px = 12.0;
+const double kPS350px = 350.0;
+

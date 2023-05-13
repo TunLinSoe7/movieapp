@@ -1,0 +1,11 @@
+const kSearchBarText = "Search movies...";
+const kYouMayLikeText = "You may like";
+const kPopularText = "Popular";
+const kStoryLineText = "Story line";
+const kStarCastText = "Star Cast";
+const kTalentSquadText = "Talent Squad";
+const kCompanyText = "Production Company";
+const kRecommendedText = "Recommended";
+const kBiographyText = "Biography";
+const kMoreInfoText = "More Information";
+const kKnowForText = "Known For";

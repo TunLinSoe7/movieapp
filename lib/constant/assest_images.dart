@@ -1,0 +1,1 @@
+String kPlaceHoderImage = "images/place_holder.jpg";
