@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../constant/assest_images.dart';
 import '../constant/dimens.dart';
-class StarCastTalentWidget extends StatelessWidget {
+class StarCastTalentWidget<T> extends StatelessWidget {
   const StarCastTalentWidget({Key? key, required this.images}) : super(key: key);
 final List<Map<String,String>> images;
 
@@ -14,9 +14,10 @@ final List<Map<String,String>> images;
           scrollDirection: Axis.horizontal,
           itemCount: images.length,itemBuilder: (context,index){
         return Column(
+mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: kPS200px,
+              width: 150,
               child: ListTile(
                 leading:ClipOval(
                   child: CachedNetworkImage(
@@ -26,12 +27,11 @@ final List<Map<String,String>> images;
                     fit: BoxFit.fill,
                     placeholder: (url,error)=> Image.asset(kPlaceHoderImage),),
                 ),
-                title: Text(images[index]['type']!,style: const TextStyle(color: Colors.white,fontSize: kPS14px,fontWeight: FontWeight.bold),),
+                title: Wrap(children:[ Text(images[index]['type']!,style: const TextStyle(color: Colors.white,fontSize: kPS14px,fontWeight: FontWeight.bold),)]),
                 subtitle: Text(images[index]['name']!,style: const TextStyle(color: Colors.white70,fontSize: kPS12px)),
               ),
             ),
           ],
         );
       }),);
-  }
-}
+  }}
