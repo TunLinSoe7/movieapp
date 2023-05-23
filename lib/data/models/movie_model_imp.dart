@@ -56,14 +56,12 @@ class MovieModelImpl extends MovieModel {
   Future<List<ProductionCompaniesVO>?> getCompanyList(int movieID) =>
       _movieDataAgent.getCompanyDetails(movieID)
   .then((value) {
-    final data = value;
-       if(data!= null){
-         for (final company in data) {
-           if (company.logoPath == null || company.logoPath == "") {
-              company.logoPath = "";
-           }
-         }
-       }
-       return  data;
-      });
+    final companyData =  value;
+    companyData?.toList().map((e) {
+      final data = e;
+      data == null || data==""?data.logoPath == "https://image.tmdb.org/t/p/w500/2RYvU63aWqdRvzvGhAZlGpbIOqA.jpg": data.logoPath;
+    });
+return companyData;
+  }
+  );
 }

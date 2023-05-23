@@ -29,7 +29,6 @@ final double width;
               errorWidget: (context,url,error)=>const Center(child: CircularProgressIndicator(),),),
           ),
         ) ,
-
         Positioned(
             bottom:1,
             child: Column(
@@ -38,12 +37,13 @@ final double width;
                 Padding(
                   padding:  const EdgeInsets.only(left: 8.0),
                   child: Wrap(
-                    children: [
-                      SizedBox(
+                    children:[
+                      Container(
+                        padding: const EdgeInsets.only(left: 3,right: 3),
                           width:imageWidth,
                           child: Text( title,style:const TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 17),))
-                    ],
-                  ),
+
+                  ]),
                 ),
                 const SizedBox(height: kPS10px,),
                 Padding(

@@ -68,7 +68,9 @@
 //       ], body: body,);
 //   }
 // }
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constant/assest_images.dart';
 import '../constant/dimens.dart';
 
 class SliverAppBarWidget<T> extends StatelessWidget {
@@ -78,19 +80,16 @@ class SliverAppBarWidget<T> extends StatelessWidget {
     this.titlePadding,
     this.child,
     required this.centerTitle,
-    required this.dataFuture,
-    required this.builder, required this.textBuilder, required this.bodyBuilder,
+    this.title,required this.imageUrl, required this.body,
   }) : super(key: key);
 
   final double expandedHeight;
   final EdgeInsetsGeometry? titlePadding;
   final Widget? child;
   final bool centerTitle;
-  final Future<T> dataFuture;
-  final AsyncWidgetBuilder<T> builder;
-  final AsyncWidgetBuilder<T> textBuilder;
-  final AsyncWidgetBuilder<T> bodyBuilder;
-
+  final Widget? title;
+  final String imageUrl;
+  final Widget body;
   @override
   Widget build(BuildContext context) {
     return NestedScrollView(
@@ -104,19 +103,17 @@ class SliverAppBarWidget<T> extends StatelessWidget {
           expandedHeight: expandedHeight,
           flexibleSpace: FlexibleSpaceBar(
             centerTitle: centerTitle,
-            title: FutureBuilder<T>(
-              future: dataFuture,
-              builder: textBuilder,
-            ),
+            title: title,
             titlePadding: titlePadding,
             collapseMode: CollapseMode.pin,
             background: Stack(
               fit: StackFit.expand,
               children: [
-                FutureBuilder<T>(
-                  future: dataFuture,
-                  builder: builder,
-                ),
+            CachedNetworkImage(imageUrl:imageUrl,
+            fit: BoxFit.cover,
+            placeholder: (context,url)=>Center(child: Image.asset(kPlaceHoderImage),),
+              errorWidget: (context,url,error)=>const Center(child: Icon(Icons.error),),
+            ),
                 Positioned(
                   top: kPS50px,
                   left: kPS10px,
@@ -139,7 +136,7 @@ class SliverAppBarWidget<T> extends StatelessWidget {
           ),
         ),
       ],
-      body: FutureBuilder<T>(future: dataFuture,builder: bodyBuilder,),
+      body: body ,
     );
   }
 }

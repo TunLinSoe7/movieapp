@@ -7,7 +7,6 @@ import 'package:movie_app/data/vos/productionCompanies_vo/production_companies_v
 import 'package:movie_app/network/api/movie_api.dart';
 import 'package:movie_app/network/response/actor_detail_response/actor_detail_response.dart';
 import 'package:movie_app/network/response/moviedetails_response/movie_details_response.dart';
-
 import 'movie_data_agent.dart';
 
 

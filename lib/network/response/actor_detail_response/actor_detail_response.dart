@@ -13,7 +13,7 @@ class ActorDetailResponse {
   @JsonKey(name: 'deathday')
   String? deathDay;
   @JsonKey(name: 'gender')
-  dynamic? gender;
+  dynamic gender;
   @JsonKey(name: 'homepage')
   String? homepage;
   @JsonKey(name: 'id')

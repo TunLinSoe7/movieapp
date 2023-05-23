@@ -28,6 +28,48 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  List<MovieVO>? movieItems;
+  List<MovieVO>? movieData;
+  List<MovieVO>? movie;
+  List<GenresVO>? categories;
+  List<ActorResultsVO>? actorData;
+  //bool isLoading = true;
+  @override
+  void initState() {
+    ///Categories
+    _movieModel.getGenresList().then((value) {
+     setState(() {
+       categories = value;
+     });
+    }).catchError((error)=> null);
+    ///Banner Image
+    _movieModel.getMoviesList().then((value) {
+     setState(() {
+       movieItems = value;
+     });
+    }).catchError((error)=>null);
+
+    ///You May Like
+
+    _movieModel.getTopRatedMoviesList().then((value) {
+      setState(() {
+        movieData = value;
+      });
+    }).catchError((error)=>const Center(child: Text("Not Data Avaliable"),));
+    ///Popular
+    _movieModel.getPopularMoviesList().then((value) {
+      setState(() {
+        movie = value;
+      });
+    }).catchError((error)=>const Center(child: Text("Not Data Avaliable"),));
+    ///Banner Image
+    _movieModel.getActorList().then((value) {
+      setState(() {
+        actorData = value;
+      });
+    }).catchError((error)=>const Center(child: Text("Not Data Avaliable"),));
+    super.initState();
+  }
 
 
   @override
@@ -81,55 +123,39 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity,
               height: kPS40px,
-              child: FutureBuilder<List<GenresVO>?>(
-                future: _movieModel.getGenresList(),
-                builder: (context, snapShot) {
-                  if (snapShot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapShot.hasError) {
-                    return const Center(
-                      child: Text("Error"),
-                    );
-                  } else {
-                    final genreData = snapShot.data;
-                    return ListView.separated(
-                        separatorBuilder: (context, index) => const SizedBox(
-                              width: kPS10px,
-                            ),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: genreData!.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedIndex = index;
-                              });
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(kPS8px),
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: kPS10px),
-                              decoration: BoxDecoration(
-                                  color: selectedIndex == index
-                                      ? Colors.redAccent
-                                      : null,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: Text(
-                               "${genreData?[index].name}",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                              ),
-                            ),
-                          );
+              child:  categories=="" || categories ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    width: kPS10px,
+                  ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
                         });
-                  }
-                },
-              ),
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(kPS8px),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: kPS10px),
+                        decoration: BoxDecoration(
+                            color: selectedIndex == index
+                                ? Colors.redAccent
+                                : null,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: categories == null ? const CircularProgressIndicator(color: Colors.red,):Text(
+                          "${categories?[index].name}",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ),
+                    );
+                  })
             ),
             const SizedBox(
               height: kPS15px,
@@ -138,26 +164,44 @@ class _HomePageState extends State<HomePage> {
               height: kPS20px,
             ),
             /// BannerImage
-          CarouselImage<MovieVO>(future: _movieModel.getMoviesList(), dataLimit: 5,itemBuilder: (context,movieData){
+
+            movieItems=="" || movieItems ==null?  Center(child: Container(
+           margin: const EdgeInsets.only(bottom: 200,top: 70),
+             child: const CircularProgressIndicator(color: Colors.red,))):
+            CarouselSliderWidget(autoPlay: true,itemCount: movieItems?.take(5).length ?? 0, itemBuilder: (context,index){
             return Hero(
-              tag: 'movie_${movieData.id}',
-              child: CarouselStackWidget(imagerUrl: "https://image.tmdb.org/t/p/w500/${movieData.posterPath}", imageHeight: 400, imageWidth: MediaQuery.of(context).size.width*0.8,decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Colors.transparent,
-                  Colors.black
-                ],begin: Alignment.topCenter,end: Alignment.bottomCenter),
-              ),onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> MovieDetailScreen(movieID: movieData.id,)));
-              },),
+              tag: 'movie_${movieItems?[index].id}',
+              child: CarouselStackWidget(imagerUrl: 'https://image.tmdb.org/t/p/w500/${movieItems?[index].posterPath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> MovieDetailScreen(movieID: movieItems?[index].id,)));
+              },decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black
+                    ]
+                  )
+                ),),
             );
-          }),
-             ListViewImage<MovieVO>(lisViewHeight: 200,future: _movieModel.getMoviesList(), itemBuilder: (context,movie){
+          },),
+            movieItems=="" || movieItems ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):
+            ListViewImageWidget(listViewHeight: kPS200px, itemCount:movieItems?.length ?? 0, itemBuilder: (context,index){
                 return Container(
-                   width: kPS260px,
-                   margin: const EdgeInsets.symmetric(horizontal: kPS15px,vertical: kPS15px),
-                   child: StackWidget(width: 100,imageWidth:kPS260px,imageHeight:kPS200px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movie?.backdropPath}', title:  movie?.title ?? "", voteAverage: "${movie?.voteAverage}", voteCount: "${movie?.voteCount}")
-               );
-             },),
+                    width: kPS260px,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: kPS15px, vertical: kPS15px),
+                    child: StackWidget(width: 100,
+                        imageWidth: kPS260px,
+                        imageHeight: kPS200px,
+                        imageUrl: 'https://image.tmdb.org/t/p/w500/${movieItems?[index]
+                            .backdropPath}',
+                        title: movieItems?[index].title ?? "",
+                        voteAverage: "${movieItems?[index].voteAverage}",
+                        voteCount: "${movieItems?[index].voteCount}")
+                );
+            }),
             ///You May Like images
             Container(
                 margin: const EdgeInsets.all(kPS15px),
@@ -169,16 +213,16 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 18,
                       color: Colors.white),
                 )),
-           ListViewImage<MovieVO>(lisViewHeight: kPS260px,future: _movieModel.getTopRatedMoviesList(), itemBuilder: (context,movie){
-             return  Container(
-                 width: kPS180px,
-                 margin: const EdgeInsets.symmetric(horizontal: kPS15px,vertical: kPS15px),
-                 child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movie?.backdropPath}', title:  movie?.title ?? "", voteAverage: "${movie?.voteAverage}", voteCount: "${movie?.voteCount}")
-             );
-           }),
+            movieData=="" || movieData ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):ListViewImageWidget(listViewHeight: kPS260px, itemCount: movieData?.length ?? 0, itemBuilder:(context,index){
+              return  Container(
+                  width: kPS180px,
+                  margin: const EdgeInsets.symmetric(horizontal: kPS15px,vertical: kPS15px),
+                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movieData?[index].backdropPath}', title:  movieData?[index].title ?? "", voteAverage: "${movieData?[index].voteAverage}", voteCount: "${movieData?[index].voteCount}")
+              );
+            }),
 
             ///Popular
-            Container(
+             Container(
                 margin: const EdgeInsets.all(kPS15px),
                 alignment: Alignment.centerLeft,
                 child: const Text(
@@ -192,28 +236,35 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: kPS10px,
             ),
-            ListViewImage<MovieVO>(lisViewHeight: kPS260px,future: _movieModel.getPopularMoviesList(), itemBuilder: (context,movie){
+            movie=="" || movie ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):
+            ListViewImageWidget(listViewHeight: kPS260px, itemCount: movie?.length ?? 0, itemBuilder:(context,index){
               return  Container(
                   width: kPS180px,
                   margin: const EdgeInsets.symmetric(horizontal: kPS15px,vertical: kPS15px),
-                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movie?.backdropPath}', title:  movie?.title ?? "", voteAverage: "${movie?.voteAverage}", voteCount: "${movie?.voteCount}")
+                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movie?[index].backdropPath}', title:  movie?[index].title ?? "", voteAverage: "${movie?[index].voteAverage}", voteCount: "${movieData?[index].voteCount}")
               );
             }),
 
+
             ///Actor image slider
-            CarouselImage<ActorResultsVO>(future:_movieModel.getActorList() , itemBuilder: (context,movie){
+            actorData== null|| actorData==""?const Center(child: CircularProgressIndicator(color: Colors.red,)):CarouselSliderWidget(autoPlay:false,itemCount: actorData?.length ?? 0, itemBuilder: (context,index){
               return Hero(
-                tag: "actor_${movie.id}",
-                child: CarouselStackWidget(name:movie.name,showCircleAvatar: false,showActorName: true,imagerUrl: "https://image.tmdb.org/t/p/w500/${movie.profilePath}", imageHeight: 400, imageWidth: MediaQuery.of(context).size.width*0.8,decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    Colors.black
-                  ],begin: Alignment.topCenter,end: Alignment.bottomCenter),
-                ),onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ActorDetailScreen(actorID: movie.id,)));
-                },),
+                tag: 'movie_${actorData?[index].id}',
+                child: actorData == null ? const CircularProgressIndicator(color: Colors.red,):CarouselStackWidget(imagerUrl: 'https://image.tmdb.org/t/p/w500/${actorData?[index].profilePath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ActorDetailScreen(actorID: actorData?[index].id,)));
+                  },decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black
+                          ]
+                      )
+                  ),),
               );
-            }),
+            },),
             const SizedBox(
               height: 30,
             ),

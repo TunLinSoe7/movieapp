@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/pages/home_page.dart';
-import 'package:movie_app/pages/movie_details.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return const  MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: HomePage(),

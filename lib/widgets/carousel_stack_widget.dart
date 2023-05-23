@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../constant/assest_images.dart';
 import '../constant/dimens.dart';
-class CarouselStackWidget extends StatelessWidget {
-  const CarouselStackWidget({Key? key,  this.showActorName=true,  this.showCircleAvatar=true, required this.imagerUrl,  this.name, required this.imageHeight, required this.imageWidth, this.decoration, this.onTap}) : super(key: key);
+class CarouselStackWidget<T> extends StatelessWidget {
+  const CarouselStackWidget({Key? key,  this.showActorName=true,  this.showCircleAvatar=true, required this.imagerUrl,  this.name, required this.imageHeight, required this.imageWidth, this.decoration, this.onTap,}) : super(key: key);
 final bool showActorName;
 final bool showCircleAvatar;
 final String imagerUrl;
@@ -13,6 +13,7 @@ final double imageHeight;
 final double imageWidth;
 final Decoration? decoration;
 final void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
