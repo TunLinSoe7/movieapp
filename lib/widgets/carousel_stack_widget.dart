@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
 import '../constant/assest_images.dart';
 import '../constant/dimens.dart';
 class CarouselStackWidget<T> extends StatelessWidget {
@@ -13,6 +12,7 @@ final double imageHeight;
 final double imageWidth;
 final Decoration? decoration;
 final void Function()? onTap;
+
 
   @override
   Widget build(BuildContext context) {

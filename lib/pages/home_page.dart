@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/data/vos/actor_vo/result_vo/actor_result_vo.dart';
 import 'package:movie_app/pages/actor_details.dart';
@@ -7,17 +6,14 @@ import 'package:movie_app/widgets/carousel_stack_widget.dart';
 import 'package:movie_app/widgets/carousel_widget.dart';
 import 'package:movie_app/widgets/lisview_image_widget.dart';
 import 'package:movie_app/widgets/stack_widget.dart';
-import '../constant/assest_images.dart';
 import '../constant/dimens.dart';
 import '../constant/strings.dart';
 import '../data/models/movie_model.dart';
 import '../data/models/movie_model_imp.dart';
 import '../data/vos/genres_vo/genres_vo.dart';
 import '../data/vos/movie_vo/result_vo.dart';
-final MovieModel _movieModel = MovieModelImpl();
 
 class HomePage extends StatefulWidget {
-
 
   const HomePage({super.key});
 
@@ -27,13 +23,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final MovieModel _movieModel = MovieModelImpl();
   int selectedIndex = 0;
   List<MovieVO>? movieItems;
   List<MovieVO>? movieData;
   List<MovieVO>? movie;
   List<GenresVO>? categories;
   List<ActorResultsVO>? actorData;
-  //bool isLoading = true;
   @override
   void initState() {
     ///Categories
@@ -41,7 +37,7 @@ class _HomePageState extends State<HomePage> {
      setState(() {
        categories = value;
      });
-    }).catchError((error)=> null);
+    }).catchError((error)=> print(error));
     ///Banner Image
     _movieModel.getMoviesList().then((value) {
      setState(() {
@@ -55,19 +51,19 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         movieData = value;
       });
-    }).catchError((error)=>const Center(child: Text("Not Data Avaliable"),));
+    }).catchError((error)=>print(error.toString()));
     ///Popular
     _movieModel.getPopularMoviesList().then((value) {
       setState(() {
         movie = value;
       });
-    }).catchError((error)=>const Center(child: Text("Not Data Avaliable"),));
+    }).catchError((error)=>print(error.toString()));
     ///Banner Image
     _movieModel.getActorList().then((value) {
       setState(() {
         actorData = value;
       });
-    }).catchError((error)=>const Center(child: Text("Not Data Avaliable"),));
+    }).catchError((error)=>print(error.toString()));
     super.initState();
   }
 
@@ -250,7 +246,7 @@ class _HomePageState extends State<HomePage> {
             actorData== null|| actorData==""?const Center(child: CircularProgressIndicator(color: Colors.red,)):CarouselSliderWidget(autoPlay:false,itemCount: actorData?.length ?? 0, itemBuilder: (context,index){
               return Hero(
                 tag: 'movie_${actorData?[index].id}',
-                child: actorData == null ? const CircularProgressIndicator(color: Colors.red,):CarouselStackWidget(imagerUrl: 'https://image.tmdb.org/t/p/w500/${actorData?[index].profilePath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
+                child: actorData == null ? const CircularProgressIndicator(color: Colors.red,):CarouselStackWidget(showCircleAvatar: false,imagerUrl: 'https://image.tmdb.org/t/p/w500/${actorData?[index].profilePath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ActorDetailScreen(actorID: actorData?[index].id,)));
                   },decoration: const BoxDecoration(

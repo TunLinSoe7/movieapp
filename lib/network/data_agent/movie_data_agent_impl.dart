@@ -29,17 +29,19 @@ class MovieDataAgentImpl extends MovieDataAgent {
       .first;
 
   @override
-  Future<List<MovieVO>?> getMoviesList() => _api
+  Future<List<MovieVO>?> getMoviesList() {
+    return _api
       .getNowPlayingMovieResponse(kApiKey)
       .asStream()
       .map((event) => event.results)
-      .first;
+      .first;}
   @override
-  Future<List<MovieVO>?> getTopRatedMoviesList() => _api
+  Future<List<MovieVO>?> getTopRatedMoviesList() {
+    return _api
       .getTopRatedResponse(kApiKey)
       .asStream()
       .map((event) => event.results)
-      .first;
+      .first;}
 
   @override
   Future<List<MovieVO>?> getPopularMoviesList() => _api

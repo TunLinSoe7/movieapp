@@ -1,16 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/network/response/actor_detail_response/actor_detail_response.dart';
 import '../constant/dimens.dart';
 import '../constant/strings.dart';
 import '../data/models/movie_model.dart';
 import '../data/models/movie_model_imp.dart';
-import '../data/vos/movie_vo/result_vo.dart';
-import '../widgets/lisview_image_widget.dart';
 import '../widgets/sliverappbar_widget.dart';
-import '../widgets/stack_widget.dart';
 import '../widgets/table_row_widget.dart';
-MovieModel _movieModel = MovieModelImpl();
 class ActorDetailScreen extends StatefulWidget {
   const ActorDetailScreen({Key? key,  this.actorID}) : super(key: key);
   final int? actorID;
@@ -20,6 +15,7 @@ class ActorDetailScreen extends StatefulWidget {
 }
 
 class _ActorDetailScreenState extends State<ActorDetailScreen> {
+  final MovieModel _movieModel = MovieModelImpl();
   ActorDetailResponse? actorDetail;
   @override
   void initState() {
