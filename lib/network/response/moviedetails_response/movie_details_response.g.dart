@@ -3,6 +3,113 @@
 part of 'movie_details_response.dart';
 
 // **************************************************************************
+// TypeAdapterGenerator
+// **************************************************************************
+
+class MovieDetailsResponseAdapter extends TypeAdapter<MovieDetailsResponse> {
+  @override
+  final int typeId = 3;
+
+  @override
+  MovieDetailsResponse read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return MovieDetailsResponse(
+      fields[0] as bool?,
+      fields[1] as String?,
+      fields[2] as int?,
+      (fields[3] as List?)?.cast<GenresVO>(),
+      fields[4] as String?,
+      fields[5] as int?,
+      fields[6] as String?,
+      fields[7] as String?,
+      fields[8] as String?,
+      fields[9] as String?,
+      fields[10] as double?,
+      fields[11] as String?,
+      (fields[12] as List?)?.cast<ProductionCompaniesVO>(),
+      (fields[13] as List?)?.cast<ProductionCountriesVO>(),
+      fields[14] as String?,
+      fields[15] as int?,
+      fields[16] as int?,
+      (fields[17] as List?)?.cast<SpokenLanguagesVO>(),
+      fields[18] as String?,
+      fields[19] as String?,
+      fields[20] as String?,
+      fields[21] as bool?,
+      fields[22] as double?,
+      fields[23] as int?,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, MovieDetailsResponse obj) {
+    writer
+      ..writeByte(24)
+      ..writeByte(0)
+      ..write(obj.adult)
+      ..writeByte(1)
+      ..write(obj.backdropPath)
+      ..writeByte(2)
+      ..write(obj.budget)
+      ..writeByte(3)
+      ..write(obj.genres)
+      ..writeByte(4)
+      ..write(obj.homepage)
+      ..writeByte(5)
+      ..write(obj.id)
+      ..writeByte(6)
+      ..write(obj.imdbId)
+      ..writeByte(7)
+      ..write(obj.originalLanguage)
+      ..writeByte(8)
+      ..write(obj.originalTitle)
+      ..writeByte(9)
+      ..write(obj.overview)
+      ..writeByte(10)
+      ..write(obj.popularity)
+      ..writeByte(11)
+      ..write(obj.posterPath)
+      ..writeByte(12)
+      ..write(obj.productionCompanies)
+      ..writeByte(13)
+      ..write(obj.productionCountries)
+      ..writeByte(14)
+      ..write(obj.releaseDate)
+      ..writeByte(15)
+      ..write(obj.revenue)
+      ..writeByte(16)
+      ..write(obj.runtime)
+      ..writeByte(17)
+      ..write(obj.spokenLanguages)
+      ..writeByte(18)
+      ..write(obj.status)
+      ..writeByte(19)
+      ..write(obj.tagline)
+      ..writeByte(20)
+      ..write(obj.title)
+      ..writeByte(21)
+      ..write(obj.video)
+      ..writeByte(22)
+      ..write(obj.voteAverage)
+      ..writeByte(23)
+      ..write(obj.voteCount);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MovieDetailsResponseAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 

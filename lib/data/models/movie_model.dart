@@ -8,11 +8,23 @@ import '../vos/movie_vo/result_vo.dart';
 
 abstract class MovieModel{
   Future<List<GenresVO>?> getGenresList();
+  Stream<List<GenresVO>?> getGenresListFromDataBase();
+  ///GetNowPlaying
   Future<List<MovieVO>?> getMoviesList();
+  Stream<List<MovieVO>?> getMovieListFromDataBase();
+  ///TopRatedMovies
   Future<List<MovieVO>?> getTopRatedMoviesList();
+  Stream<List<MovieVO>?> getTopRatedMovieListFromDataBase();
+  ///PopularMovies
   Future<List<MovieVO>?> getPopularMoviesList();
+  Stream<List<MovieVO>?> getPopularMoviesListFromDataBase();
+  ///Actor
   Future<List<ActorResultsVO>?> getActorList();
+  Stream<List<ActorResultsVO>?> getActorListFromDataBase();
   Future<ActorDetailResponse?> getActorDetailList(int actorID);
+  ///MovieDetail
   Future<MovieDetailsResponse?> getMovieDetails(int movieID);
+  Stream<MovieDetailsResponse?> getMovieDetailListFromDataBase(int movieID);
+
   Future<List<ProductionCompaniesVO>?> getCompanyList(int movieID);
 }

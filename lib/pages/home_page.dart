@@ -25,45 +25,63 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final MovieModel _movieModel = MovieModelImpl();
   int selectedIndex = 0;
-  List<MovieVO>? movieItems;
-  List<MovieVO>? movieData;
-  List<MovieVO>? movie;
-  List<GenresVO>? categories;
-  List<ActorResultsVO>? actorData;
+
+  List<GenresVO> _getGenresList = [];
+  List<MovieVO> _getNowPlayingMovieList = [];
+  List<MovieVO> _getTopRatedMovieList = [];
+  List<MovieVO> _getPopularMovieList = [];
+  List<ActorResultsVO> _getActorList = [];
   @override
   void initState() {
+
     ///Categories
-    _movieModel.getGenresList().then((value) {
-     setState(() {
-       categories = value;
-     });
-    }).catchError((error)=> print(error));
+    _movieModel.getGenresList();
+    _movieModel.getGenresListFromDataBase().listen((event) {
+      if(mounted){
+        setState(() {
+          _getGenresList = event ?? [] ;
+        });
+      }
+    });
     ///Banner Image
-    _movieModel.getMoviesList().then((value) {
-     setState(() {
-       movieItems = value;
-     });
-    }).catchError((error)=>null);
+    _movieModel.getMoviesList();
+    _movieModel.getMovieListFromDataBase().listen((event) {
+      if(mounted){
+        setState(() {
+          var temp =event ?? [];
+          _getNowPlayingMovieList = temp.take(5).toList();
+        });
+      }
+    });
 
     ///You May Like
 
-    _movieModel.getTopRatedMoviesList().then((value) {
-      setState(() {
-        movieData = value;
-      });
-    }).catchError((error)=>print(error.toString()));
+    _movieModel.getTopRatedMoviesList();
+    _movieModel.getTopRatedMovieListFromDataBase().listen((event) {
+      if(mounted){
+        setState(() {
+          _getTopRatedMovieList = event ?? [];
+        });
+      }
+    });
     ///Popular
-    _movieModel.getPopularMoviesList().then((value) {
-      setState(() {
-        movie = value;
-      });
-    }).catchError((error)=>print(error.toString()));
-    ///Banner Image
-    _movieModel.getActorList().then((value) {
-      setState(() {
-        actorData = value;
-      });
-    }).catchError((error)=>print(error.toString()));
+    _movieModel.getPopularMoviesList();
+    _movieModel.getPopularMoviesListFromDataBase().listen((event) {
+      if(mounted){
+        setState(() {
+          _getPopularMovieList= event ?? [];
+        });
+      }
+    });
+    ///Actor Image
+    _movieModel.getActorList();
+    _movieModel.getActorListFromDataBase().listen((event) {
+      if(mounted){
+        setState(() {
+          _getActorList = event ?? [];
+        });
+      }
+    });
     super.initState();
   }
 
@@ -119,12 +137,12 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: double.infinity,
               height: kPS40px,
-              child:  categories=="" || categories ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):ListView.separated(
+              child:  _getGenresList.isEmpty ?const Center(child: CircularProgressIndicator(color: Colors.red,)):ListView.separated(
                   separatorBuilder: (context, index) => const SizedBox(
                     width: kPS10px,
                   ),
                   scrollDirection: Axis.horizontal,
-                  itemCount: categories?.length ?? 0,
+                  itemCount: _getGenresList.length ?? 0,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
@@ -142,8 +160,8 @@ class _HomePageState extends State<HomePage> {
                                 ? Colors.redAccent
                                 : null,
                             borderRadius: BorderRadius.circular(5)),
-                        child: categories == null ? const CircularProgressIndicator(color: Colors.red,):Text(
-                          "${categories?[index].name}",
+                        child: _getGenresList == null ? const CircularProgressIndicator(color: Colors.red,):Text(
+                          "${_getGenresList?[index].name}",
                           style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -159,17 +177,17 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: kPS20px,
             ),
-            /// BannerImage
+            /// GetNowPlayingMovies
 
-            movieItems=="" || movieItems ==null?  Center(child: Container(
+            _getNowPlayingMovieList.isEmpty || _getNowPlayingMovieList ==null?  Center(child: Container(
            margin: const EdgeInsets.only(bottom: 200,top: 70),
              child: const CircularProgressIndicator(color: Colors.red,))):
-            CarouselSliderWidget(autoPlay: true,itemCount: movieItems?.take(5).length ?? 0, itemBuilder: (context,index){
+            CarouselSliderWidget(autoPlay: true,itemCount: _getNowPlayingMovieList?.take(5).length ?? 0, itemBuilder: (context,index){
             return Hero(
-              tag: 'movie_${movieItems?[index].id}',
-              child: CarouselStackWidget(imagerUrl: 'https://image.tmdb.org/t/p/w500/${movieItems?[index].posterPath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
+              tag: 'movie_${_getPopularMovieList[index].id}',
+              child: CarouselStackWidget(imagerUrl: 'https://image.tmdb.org/t/p/w500/${_getNowPlayingMovieList?[index].posterPath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> MovieDetailScreen(movieID: movieItems?[index].id,)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> MovieDetailScreen(movieID: _getNowPlayingMovieList?[index].id,)));
               },decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
@@ -181,9 +199,9 @@ class _HomePageState extends State<HomePage> {
                   )
                 ),),
             );
-          },),
-            movieItems=="" || movieItems ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):
-            ListViewImageWidget(listViewHeight: kPS200px, itemCount:movieItems?.length ?? 0, itemBuilder: (context,index){
+          }, enableInfiniteScroll: true,),
+            _getNowPlayingMovieList.isEmpty || _getNowPlayingMovieList ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):
+            ListViewImageWidget(listViewHeight: kPS200px, itemCount:_getNowPlayingMovieList?.length ?? 0, itemBuilder: (context,index){
                 return Container(
                     width: kPS260px,
                     margin: const EdgeInsets.symmetric(
@@ -191,11 +209,11 @@ class _HomePageState extends State<HomePage> {
                     child: StackWidget(width: 100,
                         imageWidth: kPS260px,
                         imageHeight: kPS200px,
-                        imageUrl: 'https://image.tmdb.org/t/p/w500/${movieItems?[index]
+                        imageUrl: 'https://image.tmdb.org/t/p/w500/${_getNowPlayingMovieList?[index]
                             .backdropPath}',
-                        title: movieItems?[index].title ?? "",
-                        voteAverage: "${movieItems?[index].voteAverage}",
-                        voteCount: "${movieItems?[index].voteCount}")
+                        title: _getNowPlayingMovieList?[index].title ?? "",
+                        voteAverage: "${_getNowPlayingMovieList?[index].voteAverage}",
+                        voteCount: "${_getNowPlayingMovieList?[index].voteCount}")
                 );
             }),
             ///You May Like images
@@ -209,11 +227,11 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 18,
                       color: Colors.white),
                 )),
-            movieData=="" || movieData ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):ListViewImageWidget(listViewHeight: kPS260px, itemCount: movieData?.length ?? 0, itemBuilder:(context,index){
+            _getTopRatedMovieList.isEmpty || _getTopRatedMovieList ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):ListViewImageWidget(listViewHeight: kPS260px, itemCount: _getTopRatedMovieList?.length ?? 0, itemBuilder:(context,index){
               return  Container(
                   width: kPS180px,
                   margin: const EdgeInsets.symmetric(horizontal: kPS15px,vertical: kPS15px),
-                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movieData?[index].backdropPath}', title:  movieData?[index].title ?? "", voteAverage: "${movieData?[index].voteAverage}", voteCount: "${movieData?[index].voteCount}")
+                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${_getTopRatedMovieList?[index].backdropPath}', title:  _getTopRatedMovieList?[index].title ?? "", voteAverage: "${_getTopRatedMovieList?[index].voteAverage}", voteCount: "${_getTopRatedMovieList?[index].voteCount}")
               );
             }),
 
@@ -232,23 +250,23 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(
               height: kPS10px,
             ),
-            movie=="" || movie ==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):
-            ListViewImageWidget(listViewHeight: kPS260px, itemCount: movie?.length ?? 0, itemBuilder:(context,index){
+            _getPopularMovieList.isEmpty|| _getPopularMovieList==null?const Center(child: CircularProgressIndicator(color: Colors.red,)):
+            ListViewImageWidget(listViewHeight: kPS260px, itemCount: _getPopularMovieList?.length ?? 0, itemBuilder:(context,index){
               return  Container(
                   width: kPS180px,
                   margin: const EdgeInsets.symmetric(horizontal: kPS15px,vertical: kPS15px),
-                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${movie?[index].backdropPath}', title:  movie?[index].title ?? "", voteAverage: "${movie?[index].voteAverage}", voteCount: "${movieData?[index].voteCount}")
+                  child: StackWidget(width: 50,imageWidth:kPS180px,imageHeight:kPS260px,imageUrl: 'https://image.tmdb.org/t/p/w500/${_getPopularMovieList?[index].backdropPath}', title:  _getPopularMovieList?[index].title ?? "", voteAverage: "${_getPopularMovieList?[index].voteAverage}", voteCount: "${_getPopularMovieList?[index].voteCount}")
               );
             }),
 
 
             ///Actor image slider
-            actorData== null|| actorData==""?const Center(child: CircularProgressIndicator(color: Colors.red,)):CarouselSliderWidget(autoPlay:false,itemCount: actorData?.length ?? 0, itemBuilder: (context,index){
+            _getActorList== null|| _getActorList.isEmpty?const Center(child: CircularProgressIndicator(color: Colors.red,)):CarouselSliderWidget(autoPlay:false,itemCount: _getActorList?.length ?? 0, itemBuilder: (context,index){
               return Hero(
-                tag: 'movie_${actorData?[index].id}',
-                child: actorData == null ? const CircularProgressIndicator(color: Colors.red,):CarouselStackWidget(showCircleAvatar: false,imagerUrl: 'https://image.tmdb.org/t/p/w500/${actorData?[index].profilePath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
+                tag: 'movie_${_getActorList?[index].id}',
+                child: _getActorList == null || _getActorList.isEmpty ? const CircularProgressIndicator(color: Colors.red,):CarouselStackWidget(showCircleAvatar: false,imagerUrl: 'https://image.tmdb.org/t/p/w500/${_getActorList?[index].profilePath}', imageHeight: kPS400px, imageWidth: MediaQuery.of(context).size.width*0.8,
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ActorDetailScreen(actorID: actorData?[index].id,)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ActorDetailScreen(actorID: _getActorList?[index].id,)));
                   },decoration: const BoxDecoration(
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
@@ -260,7 +278,7 @@ class _HomePageState extends State<HomePage> {
                       )
                   ),),
               );
-            },),
+            }, enableInfiniteScroll: false,),
             const SizedBox(
               height: 30,
             ),

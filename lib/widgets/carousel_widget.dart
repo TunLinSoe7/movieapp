@@ -5,12 +5,13 @@ class CarouselSliderWidget extends StatelessWidget {
   const CarouselSliderWidget({
     Key? key,
     required this.itemCount,
-    required this.itemBuilder, required this.autoPlay,
+    required this.itemBuilder, required this.autoPlay, required this.enableInfiniteScroll,
   }) : super(key: key);
 
   final int? itemCount;
   final IndexedWidgetBuilder itemBuilder;
   final bool autoPlay;
+  final bool enableInfiniteScroll;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class CarouselSliderWidget extends StatelessWidget {
       },
       options: CarouselOptions(
         height: 400,
-        enableInfiniteScroll: false,
+        enableInfiniteScroll: enableInfiniteScroll,
         viewportFraction: 0.8,
         enlargeCenterPage: true,
         autoPlay: autoPlay,
