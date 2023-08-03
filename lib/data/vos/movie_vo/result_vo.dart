@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
 import '../../../constant/hive_constant.dart';
 part 'result_vo.g.dart';
 
@@ -69,6 +68,10 @@ class MovieVO {
   bool? isPopularMovies;
   @HiveField(16)
   bool? isTopRated;
+  @HiveField(17)
+  bool? isSimilarMovies;
+  @HiveField(18)
+  bool? isSearchMovies;
 
   MovieVO(
       this.adult,
@@ -86,9 +89,11 @@ class MovieVO {
       this.voteAverage,
       this.voteCount,
      {
-    this.isGetNowPlaying=false,
-    this.isPopularMovies =false,
-    this.isTopRated=false
+       this.isGetNowPlaying=false,
+       this.isPopularMovies =false,
+       this.isTopRated=false,
+       this.isSimilarMovies= false,
+       this.isSearchMovies= false
       }
 
       );

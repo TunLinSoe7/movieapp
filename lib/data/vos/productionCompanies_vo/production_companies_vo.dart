@@ -10,7 +10,6 @@ class ProductionCompaniesVO {
   @JsonKey(name: 'id')
   @HiveField(0)
   int? id;
-
   @JsonKey(name: 'logo_path')
   @HiveField(1)
   String? logoPath;

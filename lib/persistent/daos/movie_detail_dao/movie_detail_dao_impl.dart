@@ -9,7 +9,6 @@ class MovieDetailDAOImpl extends MovieDetailResponseDAO{
   factory MovieDetailDAOImpl()=>_singleton;
   @override
   MovieDetailsResponse? getMovieDetailResponseFromDataBase(int movieID) {
-    final getMovie = _movieDetailBox();
     return _movieDetailBox().get(movieID);
   }
 

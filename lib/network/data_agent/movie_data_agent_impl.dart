@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:movie_app/constant/api_constant.dart';
 import 'package:movie_app/data/vos/actor_vo/result_vo/actor_result_vo.dart';
+import 'package:movie_app/data/vos/credit_vo/cast_vo.dart';
+import 'package:movie_app/data/vos/credit_vo/crew_vo.dart';
 import 'package:movie_app/data/vos/genres_vo/genres_vo.dart';
 import 'package:movie_app/data/vos/movie_vo/result_vo.dart';
 import 'package:movie_app/data/vos/productionCompanies_vo/production_companies_vo.dart';
@@ -29,23 +31,16 @@ class MovieDataAgentImpl extends MovieDataAgent {
       .first;
 
   @override
-  Future<List<MovieVO>?> getMoviesList() {
+  Future<List<MovieVO>?> getTopRatedMoviesList(int page) {
     return _api
-      .getNowPlayingMovieResponse(kApiKey)
-      .asStream()
-      .map((event) => event.results)
-      .first;}
-  @override
-  Future<List<MovieVO>?> getTopRatedMoviesList() {
-    return _api
-      .getTopRatedResponse(kApiKey)
+      .getTopRatedResponse(kApiKey,kQueryPage)
       .asStream()
       .map((event) => event.results)
       .first;}
 
   @override
-  Future<List<MovieVO>?> getPopularMoviesList() => _api
-      .getPopularMoviesResponse(kApiKey)
+  Future<List<MovieVO>?> getPopularMoviesList(int page) => _api
+      .getPopularMoviesResponse(kApiKey,page.toString())
       .asStream()
       .map((event) => event.results)
       .first;
@@ -70,6 +65,38 @@ class MovieDataAgentImpl extends MovieDataAgent {
       _api.getMovieDetailsResponse(kApiKey, movieID)
       .asStream()
       .map((event) => event.productionCompanies)
+      .first;
+
+  @override
+  Future<List<MovieVO>?> getSimilarMovieList(int movieID) =>
+      _api.getSimilarMovieResponse(kApiKey, movieID)
+      .asStream().map((event) => event.results).first;
+///Cast
+  @override
+  Future<List<CastVO>?> getCastList(int movieID)=>
+      _api.getCastAndCrewResponse(kApiKey, movieID)
+      .asStream()
+      .map((event) => event.cast).first;
+///Crew
+  @override
+  Future<List<CrewVO>?> getCrewList(int movieID)=>
+      _api.getCastAndCrewResponse(kApiKey, movieID)
+      .asStream()
+      .map((event) => event.crew).first;
+///Search
+  @override
+  Future<List<MovieVO>?> getSearchMoviesList() =>
+      _api.getSearchResponse(kApiKey, kQueryKey)
+      .asStream()
+      .map((event) => event.results)
+      .first;
+///MovieByGenre
+  @override
+  Future<List<MovieVO>?> getMoviesByGenreIDList(int genreID) =>
+      _api
+      .getMovieByGenreIDResponse(kApiKey, genreID.toString())
+      .asStream()
+      .map((event) => event.results)
       .first;
 
 }

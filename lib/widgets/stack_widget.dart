@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app/constant/api_constant.dart';
+import 'package:movie_app/constant/assest_images.dart';
 
 import '../constant/dimens.dart';
 
@@ -13,6 +15,7 @@ final String voteCount;
 final double imageHeight;
 final double imageWidth;
 final double width;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -20,13 +23,12 @@ final double width;
         ClipRRect(
           borderRadius: BorderRadius.circular(kPS10px),
           child: GestureDetector(
-            onTap: (){},
             child: CachedNetworkImage(
               height: imageHeight,
               width: imageWidth,
               imageUrl: imageUrl,fit: BoxFit.cover,
-              placeholder: (context,url)=>Image.asset("images/place_holder.jpg"),
-              errorWidget: (context,url,error)=>const Center(child: CircularProgressIndicator(),),),
+              placeholder: (context,url)=>Image.asset(kPlaceHoderImage),
+              errorWidget: (context,url,error)=> Center(child: Image.network(kErrorImage),),),
           ),
         ) ,
         Positioned(

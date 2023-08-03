@@ -16,4 +16,9 @@ const double kPS16px = 16.0;
 const double kPS14px = 14.0;
 const double kPS12px = 12.0;
 const double kPS350px = 350.0;
+const double kPS150px = 150.0;
+const double kPS70px = 70.0;
+const double kPS30px = 30.0;
+const double kPS5px = 5.0;
+const double kPS3px = 3.0;
 

@@ -8,7 +8,6 @@ part 'actor_result_vo.g.dart';
 @JsonSerializable()
 @HiveType(typeId: kActorVOTypeID)
 class ActorResultsVO {
-
   @JsonKey(name: 'adult')
   @HiveField(0)
   bool? adult;

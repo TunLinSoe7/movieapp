@@ -8,7 +8,7 @@ class ActorDAOImpl extends ActorDAO{
   static final ActorDAOImpl _singleton = ActorDAOImpl._();
   factory ActorDAOImpl()=>_singleton;
   @override
-  List<ActorResultsVO>? getActorResultsVOFromDatabase() =>_actorBox.values.toList();
+  List<ActorResultsVO>? getActorResultsVOFromDatabase() =>_actorBox().values.toList();
 
   @override
   Stream<List<ActorResultsVO>?> getActorResultsVOFromDatabaseFromStream() => Stream.value(getActorResultsVOFromDatabase());
@@ -17,15 +17,15 @@ class ActorDAOImpl extends ActorDAO{
   void save(List<ActorResultsVO> actor) {
     for(ActorResultsVO actorResultsVO in actor){
       if(actor!=null){
-        _actorBox.put(actorResultsVO.id, actorResultsVO);
+        _actorBox().put(actorResultsVO.id, actorResultsVO);
       }
     }
   }
 
   @override
   Stream watchBox()=>
-  _actorBox.watch();
+  _actorBox().watch();
 
-       Box<ActorResultsVO> _actorBox = Hive.box<ActorResultsVO>(kBoxNameForActorVO);
+        Box<ActorResultsVO> _actorBox()=> Hive.box<ActorResultsVO>(kBoxNameForActorVO);
 
 }
